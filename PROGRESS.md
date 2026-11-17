@@ -8,6 +8,9 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 - **Postgres via Docker Compose** : base locale reproductible. Les identifiants viennent du `.env`.
 - **Cahier des charges** : `FONCTIONNALITES.md`, avec priorités P1 à P3 et modèle de données (DATA-01 à DATA-05).
 - **Décision auth** : comptes gérés par ClubZik (e-mail + mot de passe, Better Auth). L'usage de l'identifiant INP-net est seulement conseillé. Validation de chaque nouveau compte par un admin.
+ - Pas d'e-mail pour les comptes : réinitialisation du mot de passe par un admin plutôt que par e-mail (AUTH-04 et AUTH-05 à reformuler) ?
+- Better Auth impose un e-mail : vérifier si le plugin `username` permet de s'en passer, sinon adresse factice générée.
+
 
 
 ## En cours
