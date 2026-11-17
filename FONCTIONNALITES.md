@@ -26,17 +26,17 @@ Colonnes :
 
 | ID | Fonctionnalité | Route front | Endpoint API d'origine | Rôle | Priorité |  
 |---|---|---|---|---|---|
-| AUTH-01 | Connexion avec login INP-net + mot de passe | `/` (si non connecté) | `POST rest-auth/login/` | Anonyme | P1 | 
+| AUTH-01 | Connexion avec identifiant ClubZik + mot de passe (l'identifiant INP-net est conseillé, pas obligatoire) | `/` (si non connecté) | `POST rest-auth/login/` | Anonyme | P1 | 
 | AUTH-02 | Déconnexion | barre latérale | `POST rest-auth/logout/` | Membre | P1 |
 | AUTH-03 | Récupération de l'utilisateur connecté, jeton dans l'en-tête `Authorization` | — | `GET rest-auth/user/` | Membre | P1 |
-| AUTH-04 | Demande de réinitialisation du mot de passe par e-mail | `/forgottenPassword/` | `POST rest-auth/password/reset/` | Anonyme | P2 |
-| AUTH-05 | Saisie du nouveau mot de passe depuis le lien reçu (`uid`, `token`) | `/resetPassword` | `POST rest-auth/password/reset/confirm/` | Anonyme | P2 |
+| AUTH-04 | Réinitialisation du mot de passe par un admin, sans e-mail : l'admin fixe un mot de passe temporaire pour un membre | `/admin-params` | `POST rest-auth/password/reset/` | Admin | P2 |
+| AUTH-05 | Après une réinitialisation, le membre change le mot de passe temporaire depuis ses paramètres (voir AUTH-06) | `/user-params` | `POST rest-auth/password/reset/confirm/` | Membre | P2 |
 | AUTH-06 | Changement de mot de passe : ancien, nouveau, confirmation ; 8 caractères minimum | `/user-params` | `POST rest-auth/password/change/` | Membre | P2 |
 | AUTH-07 | Compte en attente : écran « Vérification du compte en cours » tant qu'un admin n'a pas validé | `/` | `GET users/requestUserVerif/` | Membre non vérifié | P1 |
 | AUTH-08 | Enregistrement des visites | — | `GET users/registerVisit/` | Membre | P3 |
 | AUTH-09 | Inscription d'un visiteur : identifiant (utiliser son login INP-net est conseillé), prénom, nom, mot de passe, sans adresse e-mail ; le compte est créé non vérifié (voir AUTH-07 et ADM-02) | `/register` | `POST rest-auth/registration/` | Anonyme | P1 |
 
-Messages d'erreur à reproduire (AUTH-04 à AUTH-06) : mot de passe vide, ancien mot de passe manquant, moins de 8 caractères, confirmation différente, succès du changement.
+Messages d'erreur à reproduire (AUTH-06) : mot de passe vide, ancien mot de passe manquant, moins de 8 caractères, confirmation différente, succès du changement.
 
 ## RESA — Planning et réservations
 
@@ -47,7 +47,7 @@ Messages d'erreur à reproduire (AUTH-04 à AUTH-06) : mot de passe vide, ancien
 | RESA-03 | Créneaux de durée variable (1 h, 45 min, 30 min), plage de 8 h à 21 h 30 | `/booking` | — | Membre | P1 |
 | RESA-04 | Créneau libre affiché « Libre » avec bouton « Réserver » | `/booking` | — | Membre | P1 |
 | RESA-05 | Formulaire de réservation : type et titulaire  | `/booking` | `POST bookings/` | Membre | P1 |
-| RESA-06 | Types de réservation : `concert`, `jam`, `course` (Cours), `training` (Répétition), `record` (Enregistrement), `other` (Autre) | — | — | — | P1 |
+| RESA-06 | Types de réservation : `rehearsal` (Répétition), `jam`, `concert`, `course` (Cours), `other` (Autre) | — | — | — | P1 |
 | RESA-07 | Modification de sa réservation | `/booking` | `PUT bookings/{id}/` | Membre (propriétaire) | P1 | 
 | RESA-08 | Suppression de sa réservation | `/booking` | `DELETE bookings/{id}/` | Membre (propriétaire) | P1 | 
 | RESA-09 | Lien du responsable d'un créneau vers son profil | `/booking` | — | Membre | P2 | 
@@ -89,9 +89,9 @@ Messages d'erreur à reproduire (AUTH-04 à AUTH-06) : mot de passe vide, ancien
 | ADM-01 | Accès à la page d'administration réservé aux admins | `/admin-params` | — | Admin | P1 | 
 | ADM-02 | « Nouveaux membres à vérifier » : accepter ou refuser | `/admin-params` | `POST users/respondUserVerif/{id}/` | Admin | P1 | 
 | ADM-03 | « Liste des membres » avec recherche ; colonnes Utilisateur, Admin, Vérif, Actions | `/admin-params` | `GET users/full/`, `GET users/search/` | Admin | P2 | 
-| ADM-04 | Modification d'un membre : nom d'utilisateur, prénom, nom, e-mail, admin oui/non | `/admin-params` | `PUT users/{id}/` | Admin | P2 |
+| ADM-04 | Modification d'un membre : nom d'utilisateur, prénom, nom, admin oui/non (sans e-mail). Promouvoir un membre en admin est la seule façon de devenir admin. Règles, vérifiées côté serveur : seul un admin peut promouvoir ; le compte doit être approuvé ; un admin ne peut pas se rétrograder s'il est le dernier | `/admin-params` | `PUT users/{id}/` | Admin | P1 |
 | ADM-05 | Suppression d'un membre | `/admin-params` | `DELETE users/{id}/` | Admin | P2 | 
-| ADM-06 | Création d'un compte : nom d'utilisateur, prénom, nom, e-mail, admin oui/non (compte créé déjà vérifié) | `/admin-params` | `POST rest-auth/registration/` puis `PUT users/{id}/` | Admin | P2 |
+| ADM-06 | Création d'un compte : nom d'utilisateur, prénom, nom, mot de passe, admin oui/non (compte créé déjà approuvé, sans e-mail) | `/admin-params` | `POST rest-auth/registration/` puis `PUT users/{id}/` | Admin | P2 |
 | ADM-07 | Ajout d'un créneau régulier : jour, créneau, type, responsable (utilisateur ou groupe), début et fin de période | `/admin-params` | `POST bookings/regular/` | Admin | P1 | 
 | ADM-08 | « Liste des créneaux réguliers » : colonnes Type, Responsable, Jour, Créneau, Période, Actions | `/admin-params` | `GET bookings/regular/` | Admin | P1 | 
 | ADM-09 | Modification et suppression d'un créneau régulier | `/admin-params` | `PUT`, `DELETE bookings/regular/{id}/` | Admin | P2 | 
@@ -111,7 +111,7 @@ Messages d'erreur à reproduire (AUTH-04 à AUTH-06) : mot de passe vide, ancien
 
 | ID | Entité | Champs principaux | Statut |
 |---|---|---|---|
-| DATA-01 | `User` | `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_verified`, mot de passe |
+| DATA-01 | `User` | `username`, `first_name`, `last_name`, `is_staff`, `is_approved`, mot de passe ; pas d'e-mail réel (adresse factice interne imposée par Better Auth, invisible) |
 | DATA-02 | `Band` | `name`, `description`, `members` (n–n vers `User`) |
 | DATA-03 | `Booking` | `start`, `end`, `type` (voir RESA-06), titulaire : `user` ou `band` | 
 | DATA-04 | `RegularBooking` | `day` (jour de la semaine), créneau horaire, `type`, responsable `user` ou `band`, début et fin de période |
