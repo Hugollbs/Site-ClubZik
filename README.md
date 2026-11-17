@@ -31,7 +31,7 @@ npm run admin:promote -- <identifiant>
 
 Une fois admin, tu peux valider les autres comptes depuis le site.
 
-## Architecture : un dev = un dossier
+## Architecture : 
 
 - `src/routes/<page>/` : une page = un dossier. `+page.svelte` est la vue, `+page.server.ts` est le code serveur (chargement des données, actions de formulaire).
 - `src/lib/server/<domaine>.ts` : logique serveur partagée (réservations, groupes…).
