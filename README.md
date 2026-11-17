@@ -1,31 +1,56 @@
-# ClubZik — site du club de musique de l'ENSEEIHT
+# sv
 
-Ce projet vise à **recréer le site du ClubZik**.
-Le périmètre à reproduire est décrit dans [FONCTIONNALITES.md](FONCTIONNALITES.md) :
-chaque fonctionnalité y a un identifiant (`AUTH-01`, `RESA-05`, `ADM-07`…),
-un rôle et une priorité (P1 indispensable, P2 important, P3 secondaire).
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Fonctionnalités visées
+## Creating a project
 
-- **AUTH** : connexion avec le login INP-net, réinitialisation et changement de mot de passe, validation des comptes par un admin
-- **RESA** : planning et réservation de créneaux de répétition
-- **PROF** : profils des membres
-- **GRP** : groupes (bands)
-- **EVT** : événements
-- **ADM** : administration (membres, créneaux réguliers)
-- **UI** : interface (barre latérale, dates en français, affichage mobile)
-
-La première version couvre les fonctionnalités P1.
-
-## Stack
-
-SvelteKit (Svelte 5) + TypeScript + Vite
-
-## Lancer le projet
+If you're seeing this, you've probably already done this step. Congrats!
 
 ```sh
-npm install
-npm run dev
+# create a new project
+npx sv create my-app
 ```
 
-Autres commandes : `npm run build` (build de production), `npm run preview` (aperçu du build), `npm run check` (vérification des types).
+To recreate this project with the same configuration:
+
+```sh
+# recreate this project
+npx sv@1.4.0 create --template minimal --types ts --add prettier eslint vitest="usages:unit,component" playwright="demo:yes" tailwindcss="plugins:typography,forms" enhanced-img sveltekit-adapter="adapter:auto" drizzle="database:postgresql+postgresql:postgres.js+docker:no" better-auth="demo:password" mdsvex paraglide="languageTags:en, es+demo:no" storybook ai-tools="ide:claude-code+delivery:plugin+optInSkills:none" experimental="features:async,remoteFunctions" --install npm .
+```
+
+## Adding features
+
+Add features to your project with `sv add`:
+
+```sh
+npx sv add
+```
+
+For example, to add Tailwind CSS:
+
+```sh
+npx sv add tailwindcss
+```
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```sh
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```sh
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
