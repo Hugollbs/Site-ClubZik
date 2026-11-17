@@ -34,7 +34,7 @@ Colonnes :
 | AUTH-06 | Changement de mot de passe : ancien, nouveau, confirmation ; 8 caractères minimum | `/user-params` | `POST rest-auth/password/change/` | Membre | P2 |
 | AUTH-07 | Compte en attente : écran « Vérification du compte en cours » tant qu'un admin n'a pas validé | `/` | `GET users/requestUserVerif/` | Membre non vérifié | P1 |
 | AUTH-08 | Enregistrement des visites | — | `GET users/registerVisit/` | Membre | P3 |
-| AUTH-09 | Inscription d'un visiteur : identifiant (utiliser son login INP-net est conseillé), prénom, nom, e-mail, mot de passe ; le compte est créé non vérifié (voir AUTH-07 et ADM-02) | `/register` | `POST rest-auth/registration/` | Anonyme | P1 |
+| AUTH-09 | Inscription d'un visiteur : identifiant (utiliser son login INP-net est conseillé), prénom, nom, mot de passe, sans adresse e-mail ; le compte est créé non vérifié (voir AUTH-07 et ADM-02) | `/register` | `POST rest-auth/registration/` | Anonyme | P1 |
 
 Messages d'erreur à reproduire (AUTH-04 à AUTH-06) : mot de passe vide, ancien mot de passe manquant, moins de 8 caractères, confirmation différente, succès du changement.
 
