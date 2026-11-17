@@ -5,6 +5,7 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 **Objectif court terme : atteindre le « socle »**, c'est-à-dire un projet que les autres devs peuvent prendre pour développer chacun leurs pages séparément, sans toucher à l'auth, à la base ni au layout.
 
 ## Fait
+
 - **Initialisation du projet SvelteKit + README** : base du site, générée avec `sv create`.
 - **Configuration de Drizzle** : choix d'un ORM pour parler à la base.
 - **Postgres via Docker Compose** : base locale reproductible. Les identifiants viennent du `.env`.
@@ -18,10 +19,15 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 - **Docker Desktop installé, base Postgres lancée**, `npm run db:push` appliqué.
 - **Anti-chevauchement des réservations (RESA-11)** : contrainte Postgres `EXCLUDE` dans `db/extra-constraints.sql`, à appliquer avec `npm run db:constraints` après `db:push` (script rejouable).
 
+- **Brique 2 : authentification** : inscription, connexion, déconnexion, messages d'erreur en français.
+- **Briques 3 à 6** : script `admin:promote`, gardes d'accès centralisés (`src/lib/server/guards.ts`), layout avec barre latérale, page d'attente `/pending`, pages squelettes, README avec règles de contribution.
+
 ## En cours
-- Brique 2 du socle : authentification (inscription, connexion, déconnexion).
+
+- Brique 7 : hygiène (suppression de `demo/` et `vitest-examples/`, `lint` à nettoyer). Le socle est atteint dès que c'est fait.
 
 ## À faire : le socle (dans l'ordre)
+
 1. ~~Schéma de données + `db:push` + contrainte anti-chevauchement~~ : fait.
 2. Auth : inscription, connexion, déconnexion (AUTH-01, AUTH-02, AUTH-03, AUTH-09), avec génération de l'adresse factice.
 3. Script `npm run admin:promote -- <username>` : met `isStaff` et `isApproved` à vrai pour un compte inscrit via `/register`. Sert aussi à récupérer l'accès si tous les admins sont perdus. Remplace l'ancien « seed d'un compte admin ».
@@ -31,9 +37,8 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 7. Hygiène : supprimer `src/routes/demo/` et `src/lib/vitest-examples/`, vrai README (installation : `docker compose up -d`, `db:push`, puis `db:constraints`, dans cet ordre), règles de contribution (branches, PR), `npm run check` et `npm run lint` qui passent.
 
 ## À faire : ensuite, par les devs de pages (P1 d'abord)
+
 - ADM-02, ADM-04 : validation des nouveaux membres et promotion en admin (contrôle côté serveur, voir règles dans ADM-04).
 - RESA-01 à RESA-08, RESA-10, RESA-11 : planning, réservation, modification, suppression, pas de chevauchement.
 - ADM-07, ADM-08 : créneaux réguliers.
 - Puis les P2 (profils, groupes, gestion des membres, réinitialisation du mot de passe par un admin, mobile), puis les P3.
-
-
