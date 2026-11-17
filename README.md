@@ -11,24 +11,25 @@ Prérequis : Node.js (version récente) et Docker.
 
 ```sh
 npm install
-# Créer un fichier .env (jamais commité) avec : DATABASE_URL, ORIGIN, BETTER_AUTH_SECRET,
-# POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB (demander les valeurs de dev à un mainteneur)
-
+cp .env.example .env       # puis remplir BETTER_AUTH_SECRET (voir ci-dessous)
 docker compose up -d       # 1. lance Postgres
 npm run db:push            # 2. crée les tables
 npm run db:constraints     # 3. ajoute la contrainte anti-chevauchement (dans cet ordre, après db:push)
-npm run dev                # lance le site
+npm run dev                # lance le site sur http://localhost:5173
 ```
 
-### Premier admin
+Dans `.env`, la seule valeur à remplir est `BETTER_AUTH_SECRET` : `openssl rand -base64 32`.
+Le reste marche tel quel, tout est local à ta machine. Si tu changes `POSTGRES_PASSWORD` après un premier `docker compose up`, la base garde l'ancien mot de passe : repars d'une base neuve ou garde la valeur d'origine.
 
-On ne devient admin que promu par un autre admin. Pour le tout premier : s'inscrire sur `/register`, puis
+### Premier compte admin
+
+Un compte inscrit reste sur `/pending` tant qu'il n'est pas approuvé. En local, tu te promeus toi-même : inscris-toi sur `/register`, puis
 
 ```sh
 npm run admin:promote -- <identifiant>
 ```
 
-Le même script sert à récupérer l'accès si tous les admins sont perdus.
+Une fois admin, tu peux valider les autres comptes depuis le site.
 
 ## Architecture : un dev = un dossier
 
