@@ -2,33 +2,32 @@
 
 Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…).
 
+**Objectif court terme : atteindre le « socle »**, c'est-à-dire un projet que les autres devs peuvent prendre pour développer chacun leurs pages séparément, sans toucher à l'auth, à la base ni au layout.
+
 ## Fait
 - **Initialisation du projet SvelteKit + README** : base du site, générée avec `sv create`.
 - **Configuration de Drizzle** : choix d'un ORM pour parler à la base.
 - **Postgres via Docker Compose** : base locale reproductible. Les identifiants viennent du `.env`.
 - **Cahier des charges** : `FONCTIONNALITES.md`, avec priorités P1 à P3 et modèle de données (DATA-01 à DATA-05).
-- **Décision auth** : comptes gérés par ClubZik (e-mail + mot de passe, Better Auth). L'usage de l'identifiant INP-net est seulement conseillé. Validation de chaque nouveau compte par un admin.
- - Pas d'e-mail pour les comptes : réinitialisation du mot de passe par un admin plutôt que par e-mail (AUTH-04 et AUTH-05 à reformuler) ?
-- Better Auth impose un e-mail : vérifier si le plugin `username` permet de s'en passer, sinon adresse factice générée.
-
-
+- **Décision auth** : comptes gérés par ClubZik, sans adresse e-mail réelle. L'usage de l'identifiant INP-net est seulement conseillé. Validation de chaque nouveau compte par un admin.
+- **Décision e-mail** : plugin `username` de Better Auth + adresse factice générée automatiquement (Better Auth impose un e-mail). Invisible pour l'utilisateur.
+- **Décision organisation ** : organisation par route. Pages dans `src/routes/<page>/`, logique serveur commune dans `src/lib/server/<domaine>.ts`. Un dev = un dossier.
 
 ## En cours
-- Schéma de la base (`src/lib/server/db/schema.ts`) : `User`, `Band`, `Booking`, `RegularBooking`, `Visit`.
+- Brique 1 du socle : schéma de la base (`src/lib/server/db/schema.ts`) : `Band`, `Booking`, `RegularBooking`, `Visit` (+ champs supplémentaires de `User`).
 
-## À faire (par priorité, P1 d'abord)
-1. Schéma de données + `npm run db:push`.
-2. AUTH-01 à AUTH-03, AUTH-07 : connexion, déconnexion, compte en attente de vérification.
-3. ADM-01, ADM-02 : page admin protégée, validation des nouveaux membres.
-4. RESA-01 à RESA-08, RESA-10, RESA-11 : liste des créneaux, réservation, modification, suppression, pas de chevauchement.
-5. ADM-07, ADM-08 : créneaux réguliers.
-6. UI-01, UI-04 : barre latérale, dates en français.
-7. Ensuite les P2 (profils, groupes, gestion des membres, mobile), puis les P3.
-8. Nettoyer les exemples générés (`src/routes/demo/`, `src/lib/vitest-examples/`) et remplacer le README.
+## À faire : le socle (dans l'ordre)
+1. Schéma de données complet + `npm run db:push` + script de seed (compte admin de dev).
+2. Auth : inscription, connexion, déconnexion (AUTH-01, AUTH-02, AUTH-03, AUTH-09).
+3. Gardes d'accès centralisés (hooks) : non connecté → `/login`, compte non approuvé → page « en attente » (AUTH-07), `/admin-params` réservé aux admins (ADM-01).
+4. Layout commun : barre latérale (UI-01), dates en français (UI-04).
+5. Pages squelettes vides : `/booking`, `/profile`, `/bands`, `/events`, `/admin-params`, un dossier par route.
+6. Hygiène : supprimer `src/routes/demo/` et `src/lib/vitest-examples/`, vrai README (installation), règles de contribution (branches, PR), `npm run check` et `npm run lint` qui passent.
 
-## Questions ouvertes
-- Connexion INP-net (AUTH-01) : on la garde ou on utilise un compte propre au site (e-mail + mot de passe, Better Auth) ?
-- Limite de créneaux par personne (RESA-10) : oui ou non, et combien ?
-- Langues : le site doit être en français (UI-04). Paraglide est configuré en `en` et `es`, donc faut-il le garder ou le retirer ?
-- Les outils installés par défaut (Storybook, mdsvex, enhanced-img) : on les garde ?
-- Hébergement : à décider.
+## À faire : ensuite, par les devs de pages (P1 d'abord)
+- ADM-02 : validation des nouveaux membres.
+- RESA-01 à RESA-08, RESA-10, RESA-11 : planning, réservation, modification, suppression, pas de chevauchement.
+- ADM-07, ADM-08 : créneaux réguliers.
+- Puis les P2 (profils, groupes, gestion des membres, réinitialisation du mot de passe par un admin, mobile), puis les P3.
+
+
