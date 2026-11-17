@@ -17,6 +17,19 @@ Colonnes :
 
 - **Priorité** : `P1` indispensable pour une première version, `P2` important, `P3` secondaire.
 - **Rôle** : `Anonyme` (non connecté), `Membre` (connecté et vérifié), `Admin` (`is_staff`).
+- **Endpoint API d'origine** : l'API REST de l'ancien site, donnée uniquement comme référence du comportement. Le nouveau site est en SvelteKit avec Better Auth : il n'y a pas d'API REST à reproduire, la logique passe par les `load`, les actions de formulaire et `src/lib/server/`.
+
+## Avancement (2026-11-17)
+
+Pages métier : toutes sont encore des squelettes vides, sauf l'authentification.
+
+| Statut        | IDs                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| Fait          | AUTH-01, AUTH-02, AUTH-03, AUTH-07, AUTH-09, ADM-01, RESA-11, UI-01, DATA-01 à DATA-05            |
+| Partiel       | RESA-10 (le chevauchement est bloqué en base ; règle « supprimer seulement ses créneaux » à faire) |
+| À faire       | tous les autres, en commençant par ADM-02 et ADM-04 (sans eux, aucun nouveau membre n'est validé) |
+
+UI-04 (dates en français) n'est pas fait : aucune date n'est encore affichée.
 
 ---
 
@@ -106,12 +119,12 @@ Messages d'erreur à reproduire (AUTH-06) : mot de passe vide, ancien mot de pas
 
 ## DATA — Modèle de données ( copié de l'ancien code source)
 
-| ID      | Entité           | Champs principaux                                                                                                                                               | Statut |
+| ID      | Entité           | Champs principaux                                                                                                                                               | Statut (schéma en base) |
 | ------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| DATA-01 | `User`           | `username`, `first_name`, `last_name`, `is_staff`, `is_approved`, mot de passe ; pas d'e-mail réel (adresse factice interne imposée par Better Auth, invisible) |
-| DATA-02 | `Band`           | `name`, `description`, `members` (n–n vers `User`)                                                                                                              |
-| DATA-03 | `Booking`        | `start`, `end`, `type` (voir RESA-06), titulaire : `user` ou `band`                                                                                             |
-| DATA-04 | `RegularBooking` | `day` (jour de la semaine), créneau horaire, `type`, responsable `user` ou `band`, début et fin de période                                                      |
-| DATA-05 | `Visit`          | utilisateur, date                                                                                                                                               |
+| DATA-01 | `User`           | `username`, `first_name`, `last_name`, `is_staff`, `is_approved`, mot de passe ; pas d'e-mail réel (adresse factice interne imposée par Better Auth, invisible) | Fait |
+| DATA-02 | `Band`           | `name`, `description`, `members` (n–n vers `User`)                                                                                                              | Fait |
+| DATA-03 | `Booking`        | `start`, `end`, `type` (voir RESA-06), titulaire : `user` ou `band`                                                                                             | Fait |
+| DATA-04 | `RegularBooking` | `day` (jour de la semaine), créneau horaire, `type`, responsable `user` ou `band`, début et fin de période                                                      | Fait |
+| DATA-05 | `Visit`          | utilisateur, date                                                                                                                                               | Fait |
 
 ---

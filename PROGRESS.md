@@ -22,19 +22,29 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 - **Brique 2 : authentification** : inscription, connexion, déconnexion, messages d'erreur en français.
 - **Briques 3 à 6** : script `admin:promote`, gardes d'accès centralisés (`src/lib/server/guards.ts`), layout avec barre latérale, page d'attente `/pending`, pages squelettes, README avec règles de contribution.
 
+## État actuel (bilan du 2026-11-17)
+
+**Le socle est atteint**, sous réserve de la dernière vérification ci-dessous. Toutes les pages métier sont encore des squelettes (2 lignes) : `/booking`, `/profile`, `/bands`, `/events`, `/admin-params` et `/`.
+
+Fonctionnalités réellement en place (IDs de `FONCTIONNALITES.md`) : AUTH-01, AUTH-02, AUTH-03, AUTH-07, AUTH-09, ADM-01, RESA-11 (contrainte en base), UI-01 (barre latérale, lien Admin réservé aux admins) et DATA-01 à DATA-05 (schéma).
+
+Pas encore fait malgré ce que laissait croire une ancienne version de ce fichier :
+- **UI-04 (dates en français)** : aucune mise en forme de date dans le code pour l'instant.
+- **Paraglide (`messages/en.json`, `es.json`)** : seulement le scaffold d'origine (`hello_world`), les locales sont `en` et `es`, pas `fr`. Les textes du site sont écrits en dur en français.
+
 ## En cours
 
-- Brique 7 : hygiène (suppression de `demo/` et `vitest-examples/`, `lint` à nettoyer). Le socle est atteint dès que c'est fait.
+- Dernière vérification de la brique 7 : lancer `npm run check` et `npm run lint` et corriger ce qui échoue (non vérifié à ce jour). Le reste de la brique est fait (`demo/` et `vitest-examples/` supprimés, README, règles de contribution, Prettier).
 
-## À faire : le socle (dans l'ordre)
+## Le socle (dans l'ordre)
 
 1. ~~Schéma de données + `db:push` + contrainte anti-chevauchement~~ : fait.
-2. Auth : inscription, connexion, déconnexion (AUTH-01, AUTH-02, AUTH-03, AUTH-09), avec génération de l'adresse factice.
-3. Script `npm run admin:promote -- <username>` : met `isStaff` et `isApproved` à vrai pour un compte inscrit via `/register`. Sert aussi à récupérer l'accès si tous les admins sont perdus. Remplace l'ancien « seed d'un compte admin ».
-4. Gardes d'accès centralisés (hooks) : non connecté → `/login`, compte non approuvé → page « en attente » (AUTH-07), `/admin-params` réservé aux admins (ADM-01).
-5. Layout commun : barre latérale (UI-01), dates en français (UI-04).
-6. Pages squelettes vides : `/booking`, `/profile`, `/bands`, `/events`, `/admin-params`, un dossier par route.
-7. Hygiène : supprimer `src/routes/demo/` et `src/lib/vitest-examples/`, vrai README (installation : `docker compose up -d`, `db:push`, puis `db:constraints`, dans cet ordre), règles de contribution (branches, PR), `npm run check` et `npm run lint` qui passent.
+2. ~~Auth : inscription, connexion, déconnexion (AUTH-01, AUTH-02, AUTH-03, AUTH-09), avec génération de l'adresse factice~~ : fait.
+3. ~~Script `npm run admin:promote -- <username>`~~ : fait. Met `isStaff` et `isApproved` à vrai pour un compte inscrit via `/register`. Sert aussi à récupérer l'accès si tous les admins sont perdus.
+4. ~~Gardes d'accès centralisés (hooks)~~ : fait. Non connecté → `/login`, compte non approuvé → `/pending` (AUTH-07), `/admin-params` réservé aux admins (ADM-01).
+5. Layout commun : barre latérale (UI-01) fait ; **dates en français (UI-04) pas fait**, à traiter quand la première page affichera des dates (RESA-01).
+6. ~~Pages squelettes vides~~ : fait.
+7. Hygiène : tout est fait sauf `npm run check` et `npm run lint` à passer.
 
 ## À faire : ensuite, par les devs de pages (P1 d'abord)
 
