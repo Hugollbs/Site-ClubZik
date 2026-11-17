@@ -7,6 +7,8 @@ Référence des fonctionnalités : `FONCTIONNALITES.md` (IDs AUTH, RESA, ADM…)
 - **Configuration de Drizzle** : choix d'un ORM pour parler à la base.
 - **Postgres via Docker Compose** : base locale reproductible. Les identifiants viennent du `.env`.
 - **Cahier des charges** : `FONCTIONNALITES.md`, avec priorités P1 à P3 et modèle de données (DATA-01 à DATA-05).
+- **Décision auth** : comptes gérés par ClubZik (e-mail + mot de passe, Better Auth). L'usage de l'identifiant INP-net est seulement conseillé. Validation de chaque nouveau compte par un admin.
+
 
 ## En cours
 - Schéma de la base (`src/lib/server/db/schema.ts`) : `User`, `Band`, `Booking`, `RegularBooking`, `Visit`.
