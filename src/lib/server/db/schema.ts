@@ -1,5 +1,14 @@
 import {
-	pgTable, pgEnum, serial, integer, text, timestamp, time, date, primaryKey, check
+	pgTable,
+	pgEnum,
+	serial,
+	integer,
+	text,
+	timestamp,
+	time,
+	date,
+	primaryKey,
+	check
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { user } from './auth.schema';
@@ -8,7 +17,11 @@ export * from './auth.schema';
 
 // Types de réservation (RESA-06)
 export const bookingType = pgEnum('booking_type', [
-	'rehearsal', 'jam', 'concert', 'course', 'other'
+	'rehearsal',
+	'jam',
+	'concert',
+	'course',
+	'other'
 ]);
 
 export const band = pgTable('band', {
@@ -21,8 +34,12 @@ export const band = pgTable('band', {
 export const bandMember = pgTable(
 	'band_member',
 	{
-		bandId: integer('band_id').notNull().references(() => band.id, { onDelete: 'cascade' }),
-		userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
+		bandId: integer('band_id')
+			.notNull()
+			.references(() => band.id, { onDelete: 'cascade' }),
+		userId: text('user_id')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' })
 	},
 	(t) => [primaryKey({ columns: [t.bandId, t.userId] })]
 );
@@ -67,6 +84,8 @@ export const regularBooking = pgTable(
 
 export const visit = pgTable('visit', {
 	id: serial('id').primaryKey(),
-	userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	visitedAt: timestamp('visited_at', { withTimezone: true }).notNull().defaultNow()
 });

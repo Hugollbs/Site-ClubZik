@@ -4,7 +4,8 @@
 
 	let { form }: { form: ActionData } = $props();
 
-	const inputClass = 'mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm';
+	const inputClass =
+		'mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm';
 </script>
 
 <h1 class="text-2xl font-bold">Créer un compte</h1>

@@ -36,6 +36,7 @@ modifier, et où l'insérer. Chaque concept nouveau est expliqué brièvement à
 occurrence. Une erreur est expliquée (cause, diagnostic, correction) avant d'être corrigée.
 
 **Fin d'étape** : un court bilan :
+
 1. Ce que je dois faire (fichiers concernés)
 2. Pourquoi c'est écrit comme ça (1-3 choix de conception)
 3. Comment vérifier
@@ -48,7 +49,7 @@ petite partie avant de montrer sa version.
 ## Style du code
 
 - Code simple et lisible, de niveau étudiant, sans abstraction ni pattern avancé injustifié.
-- Identifiants en anglais, commentaires en français, courts, qui expliquent le *pourquoi*.
+- Identifiants en anglais, commentaires en français, courts, qui expliquent le _pourquoi_.
 - Aucune dépendance ajoutée sans proposition et explication préalables.
 - Un fichier = une responsabilité claire.
 
