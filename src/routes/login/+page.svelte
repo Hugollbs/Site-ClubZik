@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { resolve } from '$app/paths';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
 
-	const inputClass = 'mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm';
+	const inputClass =
+		'mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm';
 </script>
 
 <h1 class="text-2xl font-bold">Connexion</h1>
@@ -22,4 +24,6 @@
 </form>
 
 <p class="mt-2 text-red-600">{form?.message ?? ''}</p>
-<p class="mt-4 text-sm">Pas encore de compte ? <a href="/register" class="underline">S'inscrire</a></p>
+<p class="mt-4 text-sm">
+	Pas encore de compte ? <a href={resolve('/register')} class="underline">S'inscrire</a>
+</p>
