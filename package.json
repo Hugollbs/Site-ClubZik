@@ -74,5 +74,9 @@
 		"vite": "^8.3.0",
 		"vitest": "^4.1.8",
 		"vitest-browser-svelte": "^2.1.1"
+	},
+	"dependencies": {
+		"azucar-ui": "^0.0.15",
+		"lucide-svelte": "^1.0.1"
 	}
 }

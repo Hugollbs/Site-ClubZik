@@ -1,12 +1,12 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { RequestEvent } from '@sveltejs/kit';
 
-// Pages accessibles sans être connecté
-const PUBLIC_ROUTES = ['/login', '/register'];
-// Pages accessibles connecté mais pas encore approuvé (la page d'attente, et la déconnexion)
-const PENDING_ROUTES = ['/pending', '/logout'];
-// Pages réservées aux admins (préfixes)
-const ADMIN_ROUTES = ['/admin-params'];
+// Pages accessibles sans être connecté (route IDs pour le matching)
+const PUBLIC_ROUTES = ['/(public)', '/(public)/login', '/(public)/register'];
+// Pages accessibles connecté mais pas encore approuvé
+const PENDING_ROUTES = ['/(public)/pending', '/(public)/logout'];
+// Pages réservées aux admins
+const ADMIN_ROUTES = ['/(app)/admin-params'];
 
 const startsWithAny = (routeId: string, prefixes: string[]) =>
 	prefixes.some((prefix) => routeId === prefix || routeId.startsWith(prefix + '/'));
@@ -17,22 +17,23 @@ const startsWithAny = (routeId: string, prefixes: string[]) =>
 export function checkAccess(event: RequestEvent) {
 	const routeId = event.route.id;
 	// Route inconnue : SvelteKit affichera sa 404
+	console.log('🛡️ checkAccess routeId:', routeId);
 	if (!routeId) return;
 
 	const user = event.locals.user;
 
 	if (!user) {
 		if (startsWithAny(routeId, PUBLIC_ROUTES)) return;
-		redirect(303, '/login');
+		redirect(303, '/login');  // ← URL réelle
 	}
 
 	if (!user.isApproved) {
 		if (startsWithAny(routeId, PENDING_ROUTES)) return;
-		redirect(303, '/pending');
+		redirect(303, '/pending');  // ← URL réelle
 	}
 
 	// Approuvé : plus de raison de rester sur la page d'attente
-	if (routeId === '/pending') redirect(303, '/');
+	if (routeId === '/(public)/pending') redirect(303, '/');  // ← URL réelle
 
 	if (startsWithAny(routeId, ADMIN_ROUTES) && !user.isStaff) {
 		error(403, 'Réservé aux administrateurs.');

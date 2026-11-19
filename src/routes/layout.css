@@ -1,3 +1,12 @@
+@import 'azucar-ui/tokens.css';
+@import 'azucar-ui/base.css';
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/* overwrite thème azucar */
+:root {
+  --base-color: oklch(18.104% 0.07195 292.292);
+  --corner-radius: 1.25rem;
+  color-scheme: dark
+}
