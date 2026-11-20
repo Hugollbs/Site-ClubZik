@@ -3,7 +3,7 @@
   import { enhance } from '$app/forms';
   import type { ActionData } from './$types';
   import type { Component } from 'svelte';
-  import { User, UserPlus, Lock, LockKeyhole } from 'lucide-svelte';
+  import { User, UserPlus, Lock, LockKeyhole, ChevronLeft } from 'lucide-svelte';
 
   let { form }: { form: ActionData } = $props();
 
@@ -13,6 +13,10 @@
   let password = $state('');
   let passwordConfirm = $state('');
 </script>
+
+<a href="/login" class="text-xl font-bold text-right self-start w-[150px]">
+  <ChevronLeft />
+</a>
 
 <h1 class="text-2xl font-bold">Créer un compte</h1>
 
@@ -72,8 +76,8 @@
     Confirmer le mot de passe
   </TextInput>
 
-  <div style="margin-bottom: 10px;">
-  	<Button type="submit">S'inscrire</Button>
+  <div style="margin-bottom: 20px; margin-top: 10px;">
+  	<Button type="submit" variant="outline">S'inscrire</Button>
   </div>
 </form>
 

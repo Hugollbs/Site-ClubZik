@@ -10,7 +10,7 @@
 
 <Flex direction="column" align="center" justify="center"
       class="min-h-screen px-4 py-12" gap="md" style={`background-image: url(${bgImage}); background-size: cover; background-position: center; `}>
-  <Frame border transparent style="padding: var(--size-xl); width: fit-content;">
+  <Frame border transparent style="padding: 1.2rem var(--size-xl) var(--size-xl); width: fit-content;">
     {@render children()}
   </Frame>
   <!-- Boutons se connecter et s'inscrire pas utiles ?
