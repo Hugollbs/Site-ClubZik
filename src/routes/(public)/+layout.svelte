@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Frame, Flex, Button } from 'azucar-ui';  
-  import { resolve } from '$app/paths';
+  import { Frame, Flex, Button } from 'azucar-ui';
   import type { LayoutProps } from './$types';
 
   import bgImage from '#lib/assets/bg-exemple.JPG';

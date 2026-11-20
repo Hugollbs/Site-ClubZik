@@ -14,7 +14,7 @@
   <link rel="icon" href="/favicon.svg" />
 </svelte:head>
 
-<div class="app-wrapper min-h-screen">
+<div class="app-wrapper h-dvh overflow-hidden">
   {@render children()}
 </div>
 

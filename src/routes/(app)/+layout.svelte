@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { Frame, Flex, Button } from 'azucar-ui';
   import { resolve } from '$app/paths';
+  import bgImage from '#lib/assets/bg-exemple.JPG';
   import type { LayoutProps } from './$types';
+  import { page } from '$app/state';
 
   let { data, children }: LayoutProps = $props();
 
@@ -10,40 +13,71 @@
   const isStaff = $derived(data.user?.isStaff ?? false);
 
   const navLinks = [
-    { href: resolve('/booking'), label: 'Réservations' },
-    { href: resolve('/bands'), label: 'Groupes' },
-    { href: resolve('/events'), label: 'Événements' },
-    { href: resolve('/profile'), label: 'Profil' },
+    { href: resolve('/(app)/booking'), label: 'Réservations' },
+    { href: resolve('/(app)/bands'), label: 'Groupes' },
+    { href: resolve('/(app)/events'), label: 'Événements' },
+    { href: resolve('/(app)/profile'), label: 'Profil' },
   ];
   const adminLinks = $derived(isStaff
-    ? [{ href: resolve('/admin-params'), label: 'Admin' }]
+    ? [{ href: resolve('/(app)/admin-params'), label: 'Admin' }]
     : []);
+
+    // Sidebar escalier
+
+  const allLinks = [...navLinks, ...adminLinks];
+
+  // Niveau d'indentation
+  function getIndentLevel(index: number, total: number): number {
+    const mid = Math.floor(total / 2);
+    if (index <= mid) return mid - index;
+    return index - mid;
+  }
+
 </script>
 
-{#if showSidebar}
-  <div class="flex min-h-screen">
-    <nav class="flex w-56 shrink-0 flex-col gap-1 border-r border-gray-200 bg-gray-50 p-4">
-      <a href={resolve('/')} class="mb-4 text-xl font-bold">ClubZik</a>
-      {#each navLinks as link}
-        <a href={link.href} class="rounded-md px-3 py-2 hover:bg-gray-200">{link.label}</a>
-      {/each}
-      {#each adminLinks as link}
-        <a href={link.href} class="rounded-md px-3 py-2 hover:bg-gray-200">{link.label}</a>
-      {/each}
+<Flex direction="column" align="center" justify="center"
+    class="h-dvh w-full overflow-hidden px-4" gap="md" style={`background-image: url(${bgImage}); background-size: cover; background-position: center; `}>
+    {#if showSidebar}
+        <div class="flex h-full min-h-0 w-full gap-4">
+          <main class="flex-1 min-w-0 min-h-0 overflow-y-auto">
+            <div class="flex h-full min-h-0 items-center justify-center">
+              <Frame border transparent style="padding: 1.3rem var(--size-xl); min-width: 0; width: 90%; height: 90%; flex: none; max-width: 100%; overflow-y: auto;">
+                <a href="/" class="mb-4 text-xl font-bold text-right self-start w-[150px]">ClubZik</a>
+                {@render children()}
+              </Frame>
+            </div>
+          </main>
 
-      <div class="mt-auto text-sm">
-        <p class="px-3 text-gray-600">{displayName}</p>
-        <form method="post" action={resolve('/logout')}>
-          <button class="rounded-md px-3 py-2 hover:bg-gray-200 w-full text-left">Se déconnecter</button>
-        </form>
-      </div>
-    </nav>
-    <main class="flex-1 p-6">
-      {@render children()}
-    </main>
-  </div>
-{:else}
-  <main class="p-6">
-    {@render children()}
-  </main>
-{/if}
+          <!-- Sidebar -->
+          <aside class="flex h-full w-56 shrink-0 flex-col p-4">
+            <div class="text-sm profile-container">
+              <p class="pl-3 pr-6 text-gray-600 text-right">{displayName}</p>
+              <form method="post" action={resolve('/(public)/logout')}>
+                <Button type="submit" variant="outline">Se déconnecter</Button>
+              </form>
+            </div>
+            <nav class="flex flex-1 flex-col justify-center gap-2 sidebar-container">
+              {#each allLinks as link, index (link.href)}
+                <Button
+                  href={link.href}
+                  variant={page.url.pathname === link.href ? 'outline' : 'default'}
+                  class="justify-center"
+                  style="font-size: 18px; width: auto; max-width: 180px; text-align: center; padding: 8px 12px; margin-left: {getIndentLevel(index, allLinks.length)}rem;
+                        width: 100%; text-align: center; justify-self: stretch;"
+                >
+                  {link.label}
+                </Button>
+              {/each}
+            </nav>
+          </aside>
+        </div>
+  {/if}
+</Flex>
+
+<style>
+  .profile-container {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+</style>

@@ -12,40 +12,43 @@
 	let password = $state('');
 </script>
 
-<h1 class="text-2xl font-bold">Connexion</h1>
 
-<form method="post" use:enhance class="mt-4 flex max-w-sm flex-col gap-4">
-	<TextInput
-		name="username"
-		bind:value={username}
-		type="text"
-		placeholder="identifiant"
-		icon={User as Component}
-		required
-	>
-		Identifiant
-	</TextInput>
+<div class="flex flex-col gap-6">
+	<h1 class="text-2xl font-bold">Connexion</h1>
+	<form method="post" use:enhance class="mt-4 flex max-w-sm flex-col gap-4">
+		<TextInput
+			name="username"
+			bind:value={username}
+			type="text"
+			placeholder="identifiant"
+			icon={User as Component}
+			required
+		>
+			Identifiant
+		</TextInput>
 
-	<TextInput
-		name="password"
-		bind:value={password}
-		type="password"
-		placeholder="••••••••"
-		icon={Lock as Component}
-		required
-	>
-		Mot de passe
-	</TextInput>
+		<TextInput
+			name="password"
+			bind:value={password}
+			type="password"
+			placeholder="••••••••"
+			icon={Lock as Component}
+			required
+		>
+			Mot de passe
+		</TextInput>
 
-  	<div style="margin-bottom: 10px;">
-		<Button type="submit" variant="outline">Se connecter</Button>
-	</div>
-</form>
+		<div style="margin-bottom: 10px;">
+			<Button type="submit" variant="outline">Se connecter</Button>
+		</div>
+	</form>
 
-{#if form?.message}
-  	<p class="mt-2 text-red-600">{form.message}</p>
-{/if}
+	{#if form?.message}
+		<p class="mt-2 text-red-600">{form.message}</p>
+	{/if}
 
-<p class="mt-6 text-sm">
-  	Pas encore de compte ? <a href={resolve('/(public)/register')} class="underline">S'inscrire</a>
-</p>
+	<p class="mt-6 text-sm">
+		Pas encore de compte ? <a href={resolve('/(public)/register')} class="underline">S'inscrire</a>
+	</p>
+
+</div>
