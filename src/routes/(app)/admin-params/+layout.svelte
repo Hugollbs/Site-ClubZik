@@ -16,8 +16,8 @@
 <h1 class="text-2xl font-bold">Administration</h1>
 
 <nav class="mt-2 flex gap-4">
-	<a href={resolve('/admin-params/members')} class={tabClass(isMembers)}>Membres</a>
-	<a href={resolve('/admin-params/slots')} class={tabClass(isSlots)}>Créneaux réguliers</a>
+	<a href={resolve('/(app)/admin-params/members')} class={tabClass(isMembers)}>Membres</a>
+	<a href={resolve('/(app)/admin-params/slots')} class={tabClass(isSlots)}>Créneaux réguliers</a>
 </nav>
 
 <div class="mt-6">
