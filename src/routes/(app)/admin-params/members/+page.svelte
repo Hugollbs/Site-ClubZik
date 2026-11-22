@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button, Table, TextInput } from 'azucar-ui';
 	import { enhance } from '$app/forms';
+	import { resolve } from '$app/paths';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
@@ -57,6 +58,7 @@
 				<th>Utilisateur</th>
 				<th>Admin</th>
 				<th>Vérif</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -65,10 +67,18 @@
 					<td>{member.firstName} {member.lastName} · {member.username}</td>
 					<td>{yesNo(member.isStaff)}</td>
 					<td>{yesNo(member.isApproved)}</td>
+					<td>
+						<Button
+							href={resolve('/(app)/admin-params/members/[id]', { id: member.id })}
+							variant="outline"
+						>
+							Modifier
+						</Button>
+					</td>
 				</tr>
 			{:else}
 				<tr>
-					<td colspan="3">Aucun membre ne correspond à « {data.search} ».</td>
+					<td colspan="4">Aucun membre ne correspond à « {data.search} ».</td>
 				</tr>
 			{/each}
 		</tbody>
