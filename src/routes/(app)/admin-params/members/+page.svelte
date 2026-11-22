@@ -74,6 +74,23 @@
 						>
 							Modifier
 						</Button>
+						<!-- Pas de bouton sur sa propre ligne : le serveur refuse de toute façon -->
+						{#if member.id !== data.currentUserId}
+							<form
+								method="post"
+								action="?/remove"
+								class="inline"
+								use:enhance={({ cancel }) => {
+									const fullName = `${member.firstName} ${member.lastName}`;
+									if (!confirm(`Supprimer ${fullName} ? Ses réservations seront aussi supprimées.`)) {
+										cancel();
+									}
+								}}
+							>
+								<input type="hidden" name="id" value={member.id} />
+								<Button type="submit" variant="outline">Supprimer</Button>
+							</form>
+						{/if}
 					</td>
 				</tr>
 			{:else}

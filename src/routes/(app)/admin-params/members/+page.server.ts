@@ -84,5 +84,23 @@ export const actions: Actions = {
 		if (deleted.length === 0) {
 			return fail(404, { message: "Ce membre n'existe plus ou est déjà validé." });
 		}
+	},
+
+	remove: async ({ request, locals }) => {
+		const id = await readMemberId(request);
+		if (!id) return fail(400, { message: 'Membre manquant.' });
+
+		// Un admin ne peut pas se supprimer lui-même : il y aurait un risque de se couper l'accès
+		// (et de supprimer le dernier admin). Vérifié ici, pas seulement en cachant le bouton.
+		if (id === locals.user?.id) {
+			return fail(400, { message: 'Tu ne peux pas supprimer ton propre compte.' });
+		}
+
+		// Les réservations et appartenances à des groupes du membre partent avec lui (ON DELETE CASCADE)
+		const deleted = await db.delete(user).where(eq(user.id, id)).returning({ id: user.id });
+
+		if (deleted.length === 0) {
+			return fail(404, { message: "Ce membre n'existe plus." });
+		}
 	}
 };
