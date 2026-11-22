@@ -32,6 +32,15 @@ Pas encore fait malgré ce que laissait croire une ancienne version de ce fichie
 - **UI-04 (dates en français)** : aucune mise en forme de date dans le code pour l'instant.
 - **Paraglide (`messages/en.json`, `es.json`)** : seulement le scaffold d'origine (`hello_world`), les locales sont `en` et `es`, pas `fr`. Les textes du site sont écrits en dur en français.
 
+## Page admin (bilan du 2026-11-22)
+
+Faite, sur la branche `feature/admin-mmeberes`, dans `src/routes/(app)/admin-params/` : onglets Membres / Créneaux réguliers, validation des nouveaux membres, liste avec recherche, modification (règles ADM-04 vérifiées côté serveur), suppression avec confirmation, créneaux réguliers (ajout, liste, suppression, refus des chevauchements).
+
+- **Décision** : l'admin ne crée pas de compte (ADM-06 abandonné), les membres s'inscrivent et l'admin les valide. « Refuser » un nouveau membre supprime son compte.
+- **Décision** : les créneaux réguliers ont des heures de début et de fin libres (les jams durent de 12h à 14h), pas des tranches d'une heure.
+- **À savoir** : `resolve()` demande l'identifiant de route avec son groupe (`'/(app)/admin-params/members'`).
+- **Pas fait** : modification d'un créneau régulier (ADM-09), règle « dernier admin non rétrogradable » testée seulement par lecture du code (un seul admin en base de test).
+
 ## En cours
 
 - Dernière vérification de la brique 7 : lancer `npm run check` et `npm run lint` et corriger ce qui échoue (non vérifié à ce jour). Le reste de la brique est fait (`demo/` et `vitest-examples/` supprimés, README, règles de contribution, Prettier).

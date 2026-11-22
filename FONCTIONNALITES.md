@@ -25,9 +25,10 @@ Pages métier : toutes sont encore des squelettes vides, sauf l'authentification
 
 | Statut        | IDs                                                                                              |
 | ------------- | ------------------------------------------------------------------------------------------------ |
-| Fait          | AUTH-01, AUTH-02, AUTH-03, AUTH-07, AUTH-09, ADM-01, RESA-11, UI-01, DATA-01 à DATA-05            |
-| Partiel       | RESA-10 (le chevauchement est bloqué en base ; règle « supprimer seulement ses créneaux » à faire) |
-| À faire       | tous les autres, en commençant par ADM-02 et ADM-04 (sans eux, aucun nouveau membre n'est validé) |
+| Fait          | AUTH-01, AUTH-02, AUTH-03, AUTH-07, AUTH-09, ADM-01 à ADM-05, ADM-07, ADM-08, ADM-10, RESA-11, UI-01, DATA-01 à DATA-05 |
+| Partiel       | RESA-10 (le chevauchement est bloqué en base ; règle « supprimer seulement ses créneaux » à faire) ; ADM-09 (suppression faite, modification d'un créneau régulier pas faite) ; UI-04 (fonctions `formatDate` / `formatTime` en place, utilisées par la page admin seulement) |
+| Abandonné     | ADM-06 (création d'un compte par un admin) : décision du 2026-11-22, les membres s'inscrivent eux-mêmes et l'admin les valide |
+| À faire       | tous les autres |
 
 UI-04 (dates en français) n'est pas fait : aucune date n'est encore affichée.
 
