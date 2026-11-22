@@ -53,7 +53,10 @@ export const load: PageServerLoad = async () => {
 	}));
 
 	// Choix possibles pour le responsable (ADM-10) : les groupes et les membres déjà validés
-	const bands = await db.select({ id: band.id, name: band.name }).from(band).orderBy(asc(band.name));
+	const bands = await db
+		.select({ id: band.id, name: band.name })
+		.from(band)
+		.orderBy(asc(band.name));
 	const members = await db
 		.select({
 			id: user.id,

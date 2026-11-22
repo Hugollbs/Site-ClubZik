@@ -9,8 +9,8 @@
 	const isMembers = $derived(page.route.id === '/(app)/admin-params/members');
 	const isSlots = $derived(page.route.id === '/(app)/admin-params/slots');
 
-
-	const tabClass = (active: boolean) => (active ? 'font-bold' : 'text-gray-500 hover:text-gray-800');
+	const tabClass = (active: boolean) =>
+		active ? 'font-bold' : 'text-gray-500 hover:text-gray-800';
 </script>
 
 <h1 class="text-2xl font-bold">Administration</h1>

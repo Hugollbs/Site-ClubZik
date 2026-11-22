@@ -44,7 +44,11 @@
 
 		<div class="grid gap-4 md:grid-cols-2">
 			<div class="flex flex-col gap-2">
-				<TextInput type="search" bind:value={ownerSearch} placeholder="Rechercher un utilisateur ou un groupe…">
+				<TextInput
+					type="search"
+					bind:value={ownerSearch}
+					placeholder="Rechercher un utilisateur ou un groupe…"
+				>
 					Responsable
 				</TextInput>
 				<select name="owner" class="field-control" required>

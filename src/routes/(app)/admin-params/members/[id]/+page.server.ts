@@ -70,7 +70,7 @@ export const actions: Actions = {
 		// ADM-04 : seul un compte approuvé peut devenir admin
 		if (isStaff && !member.isApproved) {
 			return fail(400, {
-				message: 'Ce compte n\'est pas encore validé : accepte-le avant de le promouvoir.',
+				message: "Ce compte n'est pas encore validé : accepte-le avant de le promouvoir.",
 				values
 			});
 		}

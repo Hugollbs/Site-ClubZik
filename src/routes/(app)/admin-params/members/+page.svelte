@@ -68,29 +68,33 @@
 					<td>{yesNo(member.isStaff)}</td>
 					<td>{yesNo(member.isApproved)}</td>
 					<td>
-						<Button
-							href={resolve('/(app)/admin-params/members/[id]', { id: member.id })}
-							variant="outline"
-						>
-							Modifier
-						</Button>
-						<!-- Pas de bouton sur sa propre ligne : le serveur refuse de toute façon -->
-						{#if member.id !== data.currentUserId}
-							<form
-								method="post"
-								action="?/remove"
-								class="inline"
-								use:enhance={({ cancel }) => {
-									const fullName = `${member.firstName} ${member.lastName}`;
-									if (!confirm(`Supprimer ${fullName} ? Ses réservations seront aussi supprimées.`)) {
-										cancel();
-									}
-								}}
+						<div class="flex gap-2">
+							<Button
+								href={resolve('/(app)/admin-params/members/[id]', { id: member.id })}
+								variant="outline"
 							>
-								<input type="hidden" name="id" value={member.id} />
-								<Button type="submit" variant="outline">Supprimer</Button>
-							</form>
-						{/if}
+								Modifier
+							</Button>
+							<!-- Pas de bouton sur sa propre ligne : le serveur refuse de toute façon -->
+							{#if member.id !== data.currentUserId}
+								<form
+									method="post"
+									action="?/remove"
+									class="inline"
+									use:enhance={({ cancel }) => {
+										const fullName = `${member.firstName} ${member.lastName}`;
+										if (
+											!confirm(`Supprimer ${fullName} ? Ses réservations seront aussi supprimées.`)
+										) {
+											cancel();
+										}
+									}}
+								>
+									<input type="hidden" name="id" value={member.id} />
+									<Button type="submit" variant="outline">Supprimer</Button>
+								</form>
+							{/if}
+						</div>
 					</td>
 				</tr>
 			{:else}
