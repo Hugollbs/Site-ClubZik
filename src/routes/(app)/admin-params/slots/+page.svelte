@@ -190,6 +190,7 @@
 	   le tableau prend toute la largeur et seule la page défile. */
 	.slots-table :global(div.table-wrapper) {
 		overflow: visible;
+		border-radius: 0;
 	}
 
 	/* Champs natifs (heure, date, liste) : azucar-ui n'a pas de composant pour eux,
