@@ -1,9 +1,11 @@
 <script lang="ts">
-	import { Button } from 'azucar-ui';
+	import { Button, Table, TextInput } from 'azucar-ui';
 	import { enhance } from '$app/forms';
 	import type { PageProps } from './$types';
 
 	let { data, form }: PageProps = $props();
+
+	const yesNo = (value: boolean | null) => (value ? 'Oui' : 'Non');
 </script>
 
 <section class="flex flex-col gap-4">
@@ -31,4 +33,44 @@
 	{:else}
 		<p>Aucun nouveau membre à valider.</p>
 	{/each}
+</section>
+
+<section class="mt-8 flex flex-col gap-4">
+	<div class="flex items-center justify-between gap-4">
+		<h2 class="text-xl font-bold">Tous les membres</h2>
+
+		<!-- Formulaire GET : la recherche vit dans l'URL (?q=…), donc elle survit au rechargement -->
+		<form method="get" class="w-full max-w-sm">
+			<TextInput
+				type="search"
+				name="q"
+				value={data.search}
+				placeholder="Rechercher un membre…"
+				class="w-full"
+			/>
+		</form>
+	</div>
+
+	<Table>
+		<thead>
+			<tr>
+				<th>Utilisateur</th>
+				<th>Admin</th>
+				<th>Vérif</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each data.members as member (member.id)}
+				<tr>
+					<td>{member.firstName} {member.lastName} · {member.username}</td>
+					<td>{yesNo(member.isStaff)}</td>
+					<td>{yesNo(member.isApproved)}</td>
+				</tr>
+			{:else}
+				<tr>
+					<td colspan="3">Aucun membre ne correspond à « {data.search} ».</td>
+				</tr>
+			{/each}
+		</tbody>
+	</Table>
 </section>

@@ -1,10 +1,18 @@
 import { fail } from '@sveltejs/kit';
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, ilike, or } from 'drizzle-orm';
 import { db } from '#lib/server/db/index.ts';
 import { user } from '#lib/server/db/auth.schema.ts';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+// Dans un LIKE, % et _ sont des jokers : on les échappe pour chercher le texte tel quel
+function escapeLike(text: string) {
+	return text.replace(/[\\%_]/g, '\\$&');
+}
+
+export const load: PageServerLoad = async ({ url, locals }) => {
+	const search = url.searchParams.get('q')?.trim() ?? '';
+	const pattern = `%${escapeLike(search)}%`;
+
 	const pendingMembers = await db
 		.select({
 			id: user.id,
@@ -16,7 +24,28 @@ export const load: PageServerLoad = async () => {
 		.where(eq(user.isApproved, false))
 		.orderBy(asc(user.createdAt));
 
-	return { pendingMembers };
+	const members = await db
+		.select({
+			id: user.id,
+			firstName: user.firstName,
+			lastName: user.lastName,
+			username: user.username,
+			isApproved: user.isApproved,
+			isStaff: user.isStaff
+		})
+		.from(user)
+		.where(
+			search
+				? or(
+						ilike(user.firstName, pattern),
+						ilike(user.lastName, pattern),
+						ilike(user.username, pattern)
+					)
+				: undefined
+		)
+		.orderBy(asc(user.lastName), asc(user.firstName));
+
+	return { pendingMembers, members, search, currentUserId: locals.user?.id };
 };
 
 async function readMemberId(request: Request) {
