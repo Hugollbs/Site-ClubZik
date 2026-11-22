@@ -63,6 +63,35 @@ const BOOKINGS = [
 	[11, 18, 2, 'rehearsal', 'Muse']
 ] as const;
 
+// Créneaux réguliers : [jour (0 = lundi), début, fin, type, groupe ou utilisateur, début de période, fin de période]
+// Deux créneaux du même jour ne doivent pas se chevaucher si leurs périodes se recoupent
+// (règle vérifiée par la page admin, pas par la base).
+const YEAR = ['2026-09-01', '2027-06-30'] as const;
+const SEMESTER_1 = ['2026-09-01', '2027-01-31'] as const;
+const SEMESTER_2 = ['2027-02-01', '2027-06-30'] as const;
+const REGULAR_BOOKINGS = [
+	[0, '12:00', '14:00', 'jam', 'Jimi Hendrix', ...YEAR],
+	[0, '14:00', '16:00', 'course', 'Brian May', ...SEMESTER_1],
+	[0, '14:00', '16:00', 'course', 'Roger Taylor', ...SEMESTER_2],
+	[0, '18:00', '20:00', 'rehearsal', 'Queen', ...YEAR],
+	[0, '20:00', '22:00', 'rehearsal', 'Muse', ...YEAR],
+	[1, '12:00', '14:00', 'jam', 'Amy Winehouse', ...YEAR],
+	[1, '18:00', '20:00', 'rehearsal', 'The Beatles', ...YEAR],
+	[1, '20:00', '22:00', 'rehearsal', 'Nirvana', ...YEAR],
+	[2, '12:00', '14:00', 'course', 'Brian May', ...YEAR],
+	[2, '18:00', '20:00', 'rehearsal', 'Radiohead', ...YEAR],
+	[2, '20:00', '22:00', 'rehearsal', 'Daft Punk', ...YEAR],
+	[3, '12:00', '14:00', 'jam', 'Jimi Hendrix', ...YEAR],
+	[3, '17:00', '19:00', 'course', 'Roger Taylor', ...YEAR],
+	[3, '19:00', '21:00', 'rehearsal', 'Queen', ...YEAR],
+	[4, '12:00', '14:00', 'jam', 'Amy Winehouse', ...YEAR],
+	[4, '18:00', '20:00', 'rehearsal', 'Muse', ...YEAR],
+	[4, '20:00', '22:00', 'other', 'Jonny Greenwood', ...YEAR],
+	[5, '14:00', '16:00', 'rehearsal', 'Daft Punk', ...YEAR],
+	[5, '16:00', '18:00', 'rehearsal', 'Nirvana', ...YEAR],
+	[6, '15:00', '17:00', 'rehearsal', 'The Beatles', ...YEAR]
+] as const;
+
 const client = postgres(process.env.DATABASE_URL);
 const db = drizzle(client);
 
@@ -169,8 +198,17 @@ for (const row of bookingRows) {
 		VALUES (${row.start.toISOString()}, ${row.end.toISOString()}, ${row.type}, ${row.userId}, ${row.bandId})`);
 }
 
+for (const [day, startTime, endTime, type, owner, validFrom, validTo] of REGULAR_BOOKINGS) {
+	const bandId = bandIdByName.get(owner);
+	const userId = userIdByFullName.get(owner);
+	if (bandId === undefined && userId === undefined) throw new Error(`Titulaire inconnu : ${owner}`);
+	await db.execute(sql`INSERT INTO regular_booking
+		(day_of_week, start_time, end_time, type, user_id, band_id, valid_from, valid_to)
+		VALUES (${day}, ${startTime}, ${endTime}, ${type}, ${bandId === undefined ? userId! : null}, ${bandId ?? null}, ${validFrom}, ${validTo})`);
+}
+
 await client.end();
 console.log(
-	`Seed terminé : ${users.length + 1} utilisateurs, ${BANDS.length} groupes, ${bookingRows.length} réservations.`
+	`Seed terminé : ${users.length + 1} utilisateurs, ${BANDS.length} groupes, ${bookingRows.length} réservations, ${REGULAR_BOOKINGS.length} créneaux réguliers.`
 );
 console.log(`Connexion avec par ex. "freddie.mercury" / "${SEED_PASSWORD}".`);
