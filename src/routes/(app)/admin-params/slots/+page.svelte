@@ -12,13 +12,36 @@
 	const DEFAULT_START = '12:00';
 	const DEFAULT_END = '14:00';
 
-	// Recherche du responsable : on filtre les deux listes au fur et à mesure de la saisie
+	// Responsable : le texte tapé filtre les suggestions, la valeur choisie ("band:<id>" ou
+	// "user:<id>") est envoyée au serveur par un champ caché
 	let ownerSearch = $state('');
+	let ownerValue = $state('');
+	let listOpen = $state(false);
+
 	const matches = (text: string) => text.toLowerCase().includes(ownerSearch.trim().toLowerCase());
-	const shownBands = $derived(data.bands.filter((b) => matches(b.name)));
-	const shownMembers = $derived(
+	const allBands = $derived(data.bands.filter((b) => matches(b.name)));
+	const allMembers = $derived(
 		data.members.filter((m) => matches(`${m.firstName} ${m.lastName} ${m.username}`))
 	);
+
+	// La liste ne défile pas (la page défile déjà) : on n'affiche que les premiers résultats
+	// et on invite à préciser la recherche pour le reste
+	const MAX_SUGGESTIONS = 6;
+	const shownBands = $derived(allBands.slice(0, MAX_SUGGESTIONS));
+	const shownMembers = $derived(allMembers.slice(0, MAX_SUGGESTIONS - shownBands.length));
+	const hiddenCount = $derived(allBands.length + allMembers.length - MAX_SUGGESTIONS);
+
+	function chooseOwner(value: string, label: string) {
+		ownerValue = value;
+		ownerSearch = label;
+		listOpen = false;
+	}
+
+	// Dès qu'on retape, l'ancien choix n'est plus valable
+	function onOwnerInput() {
+		ownerValue = '';
+		listOpen = true;
+	}
 </script>
 
 <section class="flex flex-col gap-4 p-4">
@@ -43,31 +66,57 @@
 		</div>
 
 		<div class="grid gap-4 md:grid-cols-2">
-			<div class="flex flex-col gap-2">
+			<div class="owner-picker">
 				<TextInput
 					type="search"
 					bind:value={ownerSearch}
 					placeholder="Rechercher un utilisateur ou un groupe…"
+					autocomplete="off"
+					oninput={onOwnerInput}
+					onfocus={() => (listOpen = true)}
+					onblur={() => (listOpen = false)}
+					onkeydown={(e: KeyboardEvent) => e.key === 'Escape' && (listOpen = false)}
 				>
 					Responsable
 				</TextInput>
-				<select name="owner" class="field-control" required>
-					<option value="">— Choisir —</option>
-					{#if shownBands.length > 0}
-						<optgroup label="Groupes">
+				<input type="hidden" name="owner" value={ownerValue} />
+
+				{#if listOpen}
+					<!-- mousedown + preventDefault : le champ garde le focus, sinon le blur
+					     fermerait la liste avant que le clic ne soit pris en compte -->
+					<ul class="owner-list" onmousedown={(e) => e.preventDefault()} role="listbox">
+						{#if shownBands.length === 0 && shownMembers.length === 0}
+							<li class="owner-empty">Aucun résultat</li>
+						{/if}
+						{#if shownBands.length > 0}
+							<li class="owner-group">Groupes</li>
 							{#each shownBands as b (b.id)}
-								<option value={`band:${b.id}`}>{b.name}</option>
+								<li role="option" aria-selected={ownerValue === `band:${b.id}`}>
+									<button type="button" onclick={() => chooseOwner(`band:${b.id}`, b.name)}>
+										{b.name}
+									</button>
+								</li>
 							{/each}
-						</optgroup>
-					{/if}
-					{#if shownMembers.length > 0}
-						<optgroup label="Membres">
+						{/if}
+						{#if shownMembers.length > 0}
+							<li class="owner-group">Membres</li>
 							{#each shownMembers as m (m.id)}
-								<option value={`user:${m.id}`}>{m.firstName} {m.lastName} · {m.username}</option>
+								<li role="option" aria-selected={ownerValue === `user:${m.id}`}>
+									<button
+										type="button"
+										onclick={() => chooseOwner(`user:${m.id}`, `${m.firstName} ${m.lastName}`)}
+									>
+										{m.firstName}
+										{m.lastName} · {m.username}
+									</button>
+								</li>
 							{/each}
-						</optgroup>
-					{/if}
-				</select>
+						{/if}
+						{#if hiddenCount > 0}
+							<li class="owner-empty">… et {hiddenCount} autres, précise ta recherche</li>
+						{/if}
+					</ul>
+				{/if}
 			</div>
 
 			<div class="grid grid-cols-2 gap-4">
@@ -144,13 +193,62 @@
 		gap: var(--size-xxs);
 	}
 
-	.field input,
-	.field-control {
+	.field input {
 		padding: var(--size-sm) var(--size-md);
 		background-color: var(--color-bg-subtle);
 		border: 1px solid var(--color-border);
 		border-radius: var(--corner-radius);
 		color: inherit;
 		font: inherit;
+	}
+
+	/* Liste de suggestions du responsable, posée sous le champ */
+	.owner-picker {
+		position: relative;
+	}
+
+	.owner-list {
+		position: absolute;
+		z-index: 10;
+		top: 100%;
+		left: 0;
+		right: 0;
+		margin-top: var(--size-xxs);
+		padding: var(--size-xxs);
+		list-style: none;
+		background-color: var(--color-bg-subtle);
+		border: 1px solid var(--color-border);
+		border-radius: var(--corner-radius);
+	}
+
+	.owner-group {
+		padding: var(--size-xs) var(--size-md);
+		font-size: 0.8em;
+		font-weight: bold;
+		text-transform: uppercase;
+		opacity: 0.6;
+	}
+
+	.owner-empty {
+		padding: var(--size-sm) var(--size-md);
+		opacity: 0.6;
+	}
+
+	.owner-list button {
+		width: 100%;
+		padding: var(--size-sm) var(--size-md);
+		text-align: left;
+		background: none;
+		border: none;
+		border-radius: var(--corner-radius);
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.owner-list button:hover,
+	.owner-list button:focus-visible,
+	.owner-list [aria-selected='true'] button {
+		background-color: var(--color-border);
 	}
 </style>
