@@ -140,7 +140,7 @@
 	</form>
 </section>
 
-<section class="mt-8 flex flex-col gap-4">
+<section class="slots-table mt-8 flex flex-col gap-4">
 	<h2 class="text-xl font-bold">Créneaux réguliers existants</h2>
 
 	<Table>
@@ -185,6 +185,13 @@
 </section>
 
 <style>
+	/* Le Table d'azucar-ui met `overflow: auto` sur son conteneur : il devient alors une zone
+	   qui défile dans le cadre de la page, qui défile déjà. On le laisse donc s'étirer :
+	   le tableau prend toute la largeur et seule la page défile. */
+	.slots-table :global(div.table-wrapper) {
+		overflow: visible;
+	}
+
 	/* Champs natifs (heure, date, liste) : azucar-ui n'a pas de composant pour eux,
 	   on réutilise ses variables de thème pour qu'ils aient le même rendu que TextInput */
 	.field {
