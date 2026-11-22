@@ -98,6 +98,7 @@
 				<th>Jour</th>
 				<th>Créneau</th>
 				<th>Période</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -108,10 +109,22 @@
 					<td>{WEEK_DAYS[slot.dayOfWeek]}</td>
 					<td>{formatTime(slot.startTime)} – {formatTime(slot.endTime)}</td>
 					<td>{formatDate(slot.validFrom)} → {formatDate(slot.validTo)}</td>
+					<td>
+						<form
+							method="post"
+							action="?/remove"
+							use:enhance={({ cancel }) => {
+								if (!confirm('Supprimer ce créneau régulier ?')) cancel();
+							}}
+						>
+							<input type="hidden" name="id" value={slot.id} />
+							<Button type="submit" variant="outline">Supprimer</Button>
+						</form>
+					</td>
 				</tr>
 			{:else}
 				<tr>
-					<td colspan="5">Aucun créneau régulier pour l'instant.</td>
+					<td colspan="6">Aucun créneau régulier pour l'instant.</td>
 				</tr>
 			{/each}
 		</tbody>

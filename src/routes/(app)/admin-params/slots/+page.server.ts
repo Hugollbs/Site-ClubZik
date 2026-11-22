@@ -159,5 +159,21 @@ export const actions: Actions = {
 		});
 
 		return { message: 'Créneau ajouté.' };
+	},
+
+	remove: async ({ request }) => {
+		const formData = await request.formData();
+		const id = Number(formData.get('id'));
+		if (!Number.isInteger(id)) return fail(400, { message: 'Créneau manquant.' });
+
+		const deleted = await db
+			.delete(regularBooking)
+			.where(eq(regularBooking.id, id))
+			.returning({ id: regularBooking.id });
+
+		if (deleted.length === 0) {
+			return fail(404, { message: "Ce créneau n'existe plus." });
+		}
+		return { message: 'Créneau supprimé.' };
 	}
 };
