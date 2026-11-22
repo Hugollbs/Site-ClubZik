@@ -21,7 +21,7 @@
 	);
 </script>
 
-<section class="flex flex-col gap-4 rounded-lg border p-4">
+<section class="flex flex-col gap-4 p-4">
 	<h2 class="text-xl font-bold">Ajouter un créneau régulier</h2>
 
 	<form method="post" action="?/add" use:enhance class="flex flex-col gap-4">

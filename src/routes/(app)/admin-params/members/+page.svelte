@@ -17,7 +17,7 @@
 	{/if}
 
 	{#each data.pendingMembers as member (member.id)}
-		<div class="flex items-center justify-between gap-4 rounded-lg border px-4 py-3">
+		<div class="flex items-center justify-between gap-4 px-4 py-3">
 			<span>{member.firstName} {member.lastName} · {member.username}</span>
 
 			<div class="flex gap-2">
